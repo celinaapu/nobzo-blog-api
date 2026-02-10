@@ -31,16 +31,8 @@ const userSchema = new Schema<IUser>(
   },
 );
 
-userSchema.pre("save", async function (): Promise<void> {
-  const user = this as IUser;
-
-  if (!user.isModified("password")) {
-    return;
-  }
-
-  const salt = await bcrypt.genSalt(12);
-  user.password = await bcrypt.hash(user.password, salt);
-});
+// Password hashing is handled at the domain/service layer now.
+// Kept comparePassword util for verifying candidate passwords against stored hash.
 
 userSchema.methods.comparePassword = async function (
   candidatePassword: string,
